@@ -19,5 +19,4 @@ public class FirebaseStorageController : MonoBehaviour
         }
         Instance = this;
     }
-
 }
