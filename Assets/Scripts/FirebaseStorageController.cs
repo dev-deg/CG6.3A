@@ -6,12 +6,13 @@ using Firebase.Extensions;
 using Firebase.Storage;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FirebaseStorageController : MonoBehaviour
 {
     
     private FirebaseStorage _firebaseStorageInstance;
-    private GameObject _imagePlaceholder;
+    private Image _imagePlaceholder;
     
     //Singleton
     public static FirebaseStorageController Instance
@@ -32,10 +33,8 @@ public class FirebaseStorageController : MonoBehaviour
 
     private void Start()
     {
-        {
-            _imagePlaceholder = GameObject.Find("Downloaded_Image");
+        _imagePlaceholder = GameObject.Find("Downloaded_Image").GetComponent<Image>();
             DownloadImageAsync("gs://cg-01-7bb16.appspot.com/Thumbnails/Image1.png");
-        }
     }
 
     public void DownloadImageAsync(String url)
@@ -55,6 +54,10 @@ public class FirebaseStorageController : MonoBehaviour
                 byte[] fileContents = task.Result;
                 Debug.Log($"{imageRef.Name} finished downloading!");
                 //Display the image inside _imagePlaceholder
+                Texture2D tex = new Texture2D(1, 1);
+                tex.LoadImage(fileContents);
+                _imagePlaceholder.sprite = Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),
+                    new Vector2(tex.width/2,tex.height/2));
             }
         });
     }
