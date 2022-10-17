@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Firebase.Extensions;
 using Firebase.Storage;
@@ -13,7 +14,7 @@ public class FirebaseStorageController : MonoBehaviour
     private FirebaseStorage _firebaseStorageInstance;
     [SerializeField] private GameObject RawImagePrefab;
     private GameObject _thumbnailContainer;
-
+    private List<GameObject> _rawImageList;
     public enum DownloadType
     {
         Thumbnail, Manifest
@@ -39,6 +40,7 @@ public class FirebaseStorageController : MonoBehaviour
     private void Start()
     {
         _thumbnailContainer = GameObject.Find("Thumbnails_Container");
+        _rawImageList = new List<GameObject>();
         //Download Manifest
         DownloadFileAsync("gs://cg-01-7bb16.appspot.com/manifest.txt",DownloadType.Manifest);
     }
@@ -94,9 +96,11 @@ public class FirebaseStorageController : MonoBehaviour
     {
         // Display the image inside _imagePlaceholder
         GameObject rawImage = Instantiate(RawImagePrefab, _thumbnailContainer.transform.position, Quaternion.identity, _thumbnailContainer.transform);
+        rawImage.name = "DownloadedImage_" + _rawImageList.Count;
         Texture2D tex = new Texture2D(1, 1);
         tex.LoadImage(fileContents);
         rawImage.GetComponent<RawImage>().texture = tex;
+        _rawImageList.Add((rawImage));
         yield return null;
     }
 }
