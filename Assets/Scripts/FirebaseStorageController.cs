@@ -13,6 +13,7 @@ public class FirebaseStorageController : MonoBehaviour
     
     private FirebaseStorage _firebaseStorageInstance;
     private Image _imagePlaceholder;
+    private RawImage _rawImagePlaceholder;
     
     //Singleton
     public static FirebaseStorageController Instance
@@ -34,7 +35,8 @@ public class FirebaseStorageController : MonoBehaviour
     private void Start()
     {
         _imagePlaceholder = GameObject.Find("Downloaded_Image").GetComponent<Image>();
-            DownloadImageAsync("gs://cg-01-7bb16.appspot.com/Thumbnails/Image1.png");
+        _rawImagePlaceholder = GameObject.Find("Downloaded_Raw_Image").GetComponent<RawImage>();
+        DownloadImageAsync("gs://cg-01-7bb16.appspot.com/Thumbnails/Image1.png");
     }
 
     public void DownloadImageAsync(String url)
@@ -56,10 +58,13 @@ public class FirebaseStorageController : MonoBehaviour
                 //Display the image inside _imagePlaceholder
                 Texture2D tex = new Texture2D(1, 1);
                 tex.LoadImage(fileContents);
-                _imagePlaceholder.sprite = Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),
+                _rawImagePlaceholder.texture = tex;
+                
+                Sprite spr = Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),
                     new Vector2(tex.width/2,tex.height/2));
+                _imagePlaceholder.sprite = spr;
+                
             }
         });
     }
-    
 }
