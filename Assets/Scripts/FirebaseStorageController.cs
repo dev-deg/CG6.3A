@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using Firebase.Extensions;
 using Firebase.Storage;
@@ -40,6 +39,7 @@ public class FirebaseStorageController : MonoBehaviour
     private void Start()
     {
         _thumbnailContainer = GameObject.Find("Thumbnails_Container");
+        //Download Manifest
         DownloadFileAsync("gs://cg-01-7bb16.appspot.com/manifest.txt",DownloadType.Manifest);
     }
 
@@ -86,21 +86,17 @@ public class FirebaseStorageController : MonoBehaviour
             yield return null;
             foreach (string url in urls)
             {
-                print(url);
+                DownloadFileAsync(url, DownloadType.Thumbnail);
             }
         }    
 
     IEnumerator LoadImage(byte[] fileContents)
     {
-        // //Display the image inside _imagePlaceholder
-        // Texture2D tex = new Texture2D(1, 1);
-        // tex.LoadImage(fileContents);
-        // _rawImagePlaceholder.texture = tex;
-        //         
-        // Sprite spr = Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),
-        //     new Vector2(tex.width/2,tex.height/2));
-        // _imagePlaceholder.sprite = spr;
+        // Display the image inside _imagePlaceholder
+        GameObject rawImage = Instantiate(RawImagePrefab, _thumbnailContainer.transform.position, Quaternion.identity, _thumbnailContainer.transform);
+        Texture2D tex = new Texture2D(1, 1);
+        tex.LoadImage(fileContents);
+        rawImage.GetComponent<RawImage>().texture = tex;
         yield return null;
-        Debug.Log("Image Loaded Successfully!");
     }
 }
