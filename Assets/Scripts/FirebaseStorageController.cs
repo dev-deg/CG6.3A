@@ -16,6 +16,7 @@ public class FirebaseStorageController : MonoBehaviour
     [SerializeField] private GameObject RawImagePrefab;
     private GameObject _thumbnailContainer;
     private List<GameObject> _rawImageList;
+    private List<AssetData> _assetData;
     public enum DownloadType
     {
         Thumbnail, Manifest
@@ -84,6 +85,37 @@ public class FirebaseStorageController : MonoBehaviour
         {
             //Converting from byte array to String UTF8
             XDocument manifest = XDocument.Parse(System.Text.Encoding.UTF8.GetString(fileContents));
+            _assetData = new List<AssetData>();
+            foreach (XElement element in manifest.Root.Elements())
+            {
+                string idStr = element.Element("id")?.Value;
+                int id = (idStr != null) ? int.Parse(idStr) : 0;
+                string nameStr = element.Element("name")?.Value;
+                string urlStr = element.Element("thumbnail")?.Element("url")?.Value;
+                string priceStr = element.Element("price")?.Element("value")?.Value;
+                float price = (priceStr != null) ? float.Parse(priceStr) : 0f;
+                string currencyStr = element.Element("price")?.Element("currency")?.Value;
+                AssetData.CURRENCY currency;
+                switch (currencyStr)
+                {
+                    case "diamonds":
+                        currency = AssetData.CURRENCY.Diamonds;
+                        break;
+                    case "gold":
+                        currency = AssetData.CURRENCY.Gold;
+                        break;
+                    default:
+                        currency = AssetData.CURRENCY.Default;
+                        break;
+                }
+
+                AssetData newAsset = new AssetData(id, nameStr, urlStr, price, currency);
+                
+               
+                Debug.Log(newAsset.ToString());
+                _assetData.Add(newAsset);
+                DownloadFileAsync(newAsset.ThumbnailUrl,DownloadType.Thumbnail);
+            }
             yield return null;
         }    
 
