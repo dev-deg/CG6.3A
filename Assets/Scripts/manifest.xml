@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assets>
+    <asset>
+        <id>0</id>
+        <name>Secret Cave</name>
+        <thumbnail>
+            <alt>Secret Cave Thumbnail</alt>
+            <url>gs://cg-01-7bb16.appspot.com/Thumbnails/Image1.png</url>
+        </thumbnail>
+        <price>
+            <value>1000</value>
+            <currency>diamonds</currency>
+        </price>
+    </asset>
+    <asset>
+        <id>1</id>
+        <name>Golden Mine</name>
+        <thumbnail>
+            <alt>Golden Mine Thumbnail</alt>
+            <url>gs://cg-01-7bb16.appspot.com/Thumbnails/Image2.png</url>
+        </thumbnail>
+        <price>
+            <value>1200</value>
+            <currency>diamonds</currency>
+        </price>
+    </asset>
+</assets>
