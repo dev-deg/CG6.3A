@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 using Firebase.Extensions;
 using Firebase.Storage;
@@ -42,7 +43,7 @@ public class FirebaseStorageController : MonoBehaviour
         _thumbnailContainer = GameObject.Find("Thumbnails_Container");
         _rawImageList = new List<GameObject>();
         //Download Manifest
-        DownloadFileAsync("gs://cg-01-7bb16.appspot.com/manifest.txt",DownloadType.Manifest);
+        DownloadFileAsync("gs://cg-01-7bb16.appspot.com/manifest.xml",DownloadType.Manifest);
     }
 
     public void DownloadFileAsync(String url, DownloadType dType)
@@ -82,14 +83,8 @@ public class FirebaseStorageController : MonoBehaviour
     IEnumerator LoadManifest(byte[] fileContents)
         {
             //Converting from byte array to String UTF8
-            string s = System.Text.Encoding.UTF8.GetString(fileContents, 0, fileContents.Length);
-            //Parsing the manifest text file by splitting each url separately
-            string[] urls = s.Split("\n");
+            XDocument manifest = XDocument.Parse(System.Text.Encoding.UTF8.GetString(fileContents));
             yield return null;
-            foreach (string url in urls)
-            {
-                DownloadFileAsync(url, DownloadType.Thumbnail);
-            }
         }    
 
     IEnumerator LoadImage(byte[] fileContents)
